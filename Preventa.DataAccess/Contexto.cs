@@ -53,7 +53,7 @@ namespace Preventa.DataAccess
                 if (EntradaEntidad.State == EntityState.Added)
                 {
                     Entidad.RegistroFecha = DateTime.Now;
-                    Entidad.RegistroUsuario = "";
+                    Entidad.RegistroUsuario = "Desarrollo";
                 }
             });
 

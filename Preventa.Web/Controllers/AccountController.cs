@@ -22,10 +22,11 @@ namespace Preventa.Web.Controllers
         {
             //if (!ModelState.IsValid)
             //    return View();
-            //ViewData["mensaje"] = "Credenciales inválidas";
+            //ViewData["mensaje"] = "Credenciales inválida";
             //return View();
 
             return RedirectToAction("Index", "Home");
+            
 
         }
     }

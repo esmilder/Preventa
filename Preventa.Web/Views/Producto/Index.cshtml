@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Preventa.Modelos.Sistema.Tablas.Catalogo.Producto>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<h1>Lista de Productos</h1>
+
+<p>
+    <a asp-action="Create">Nuevo Producto</a>
+</p>
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead class="thead-light">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Descripcion)
+                </th>
+                <th>
+                    Categoría
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PrecioUnitario)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Activo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Excento)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Descripcion)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Categoria.Descripcion)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PrecioUnitario)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Activo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Excento)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning" role="button">Editar</a>
+                        @*<a  class="btn btn-danger"  onclick="confirmar(@item.Id)">Eliminar</a>*@
+                        <button class="btn btn-danger" onclick="confirmar(@item.Id)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

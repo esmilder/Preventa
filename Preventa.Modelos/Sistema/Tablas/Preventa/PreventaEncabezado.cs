@@ -18,13 +18,17 @@ namespace Preventa.Modelos.Sistema.Tablas.Preventa
         public bool Contado { get; set; }
         [Column("IdCliente")]
         public int IdCliente { get; set; }
-        [Column("Observaciones")]
+        [Column("Observacion")]
         [StringLength(250)]
-        public string Observaciones { get; set; }
+        public string Observacion { get; set; }
         [Column("Activo")]
         public bool Activo { get; set; }
 
+
+
         [ForeignKey("IdCliente")]
         public virtual Cliente Cliente { get; set; }
+
+        public virtual ICollection<PreventaDetalle> PreventaDetalle { get; set; }
     }
 }

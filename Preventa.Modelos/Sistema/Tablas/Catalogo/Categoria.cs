@@ -6,12 +6,14 @@ using System.Text;
 
 namespace Preventa.Modelos.Sistema.Tablas.Catalogo
 {
-    [Table("Categoria",Schema = "Catalogo")]
-    public class Categoria:EntidadBase
+    [Table("Categoria", Schema = "Catalogo")]
+    public class Categoria : EntidadBase
     {
         [StringLength(150)]
         [Column("Descripcion")]
-        public string  Descripcion { get; set; }
+        [Required(ErrorMessage = "Digite categoría", AllowEmptyStrings =false)]
+        //[DescripcionValida]
+        public string Descripcion { get; set; }
         [Column("Activo")]
         public bool Activo { get; set; }
 

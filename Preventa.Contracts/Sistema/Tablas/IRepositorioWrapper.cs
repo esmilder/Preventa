@@ -13,9 +13,6 @@ namespace Preventa.Contracts.Sistema.Tablas
         IRepositorioCliente Cliente { get; }
         IRepositorioClienteContacto ClienteContacto { get; }
         IRepositorioProducto Producto { get; }
-        IRepositorioListaPrecioEncabezado ListaPrecioEncabezado { get; }
-        IRepositorioListaPrecioDetalle ListaPrecioDetalle { get; }
-
         IRepositorioPreventaDetalle PreventaDetalle { get; }
         IRepositorioPreventaEncabezado PreventaEncabezado { get; }
 

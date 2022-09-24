@@ -1,0 +1,50 @@
+﻿@model Preventa.Modelos.Sistema.Tablas.Catalogo.Producto
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+
+
+<h4>Editar Producto</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Descripcion" class="control-label"></label>
+                <input asp-for="Descripcion" class="form-control" />
+                <span class="text-danger">@Html.ValidationMessageFor(d=> d.Descripcion)</span>
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="IdCategoria">Categoría</label>
+                </div>
+                <select asp-for="IdCategoria" class="custom-select" required="required" class="form-control" asp-items="ViewBag.ListaCategoria"></select>
+                <span class="text-danger">@Html.ValidationMessageFor(d=> d.IdCategoria)</span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="PrecioUnitario" class="control-label"></label>
+                <input asp-for="PrecioUnitario" class="form-control" />
+                <span class="text-danger">@Html.ValidationMessageFor(d=> d.PrecioUnitario)</span>
+            </div>
+
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Excento" /> @Html.DisplayNameFor(model => model.Excento)
+                    <span class="text-danger">@Html.ValidationMessageFor(d=> d.Excento)</span>
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Guardar" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Atrás</a>
+</div>
+

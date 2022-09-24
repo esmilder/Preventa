@@ -11,9 +11,14 @@ namespace Preventa.Modelos.Sistema.Tablas.Catalogo
     {
         [StringLength(250)]
         [Column("Descripcion")]
+        [Required(ErrorMessage ="Por favor digite nombre del producto")]
         public string Descripcion { get; set; }
         [Column("IdCategoria")]
-        public int IdCategiria { get; set; }
+        [Required(ErrorMessage = "Seleccione una Categoría")]
+        public int IdCategoria { get; set; }
+        [Column("PrecioUnitario")]
+        [Required(ErrorMessage = "Por favor digite precio")]
+        public decimal PrecioUnitario { get; set; }
         [Column("Activo")]
         public bool Activo { get; set; }
         [Column("Excento")]
@@ -23,6 +28,5 @@ namespace Preventa.Modelos.Sistema.Tablas.Catalogo
         [ForeignKey("IdCategoria")]
         public virtual Categoria Categoria { get; set; }
 
-        public virtual ICollection<ListaPrecioDetalle> ListaPrecioDetalle { get; set; }
     }
 }

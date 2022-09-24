@@ -22,11 +22,13 @@ namespace Preventa.Modelos.Sistema.Tablas.Preventa
         [Column("DescuentoPorcentaje")]
         public int DescuentoPorcentaje { get; set; }
 
+        
         [ForeignKey("IdProducto")]
         public virtual Producto Producto { get; set; }
 
         [ForeignKey("IdPreventa")]
         public virtual PreventaEncabezado PreventaEncabezado { get; set; }
+
 
     }
 }

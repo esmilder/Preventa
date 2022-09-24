@@ -18,8 +18,6 @@ namespace Preventa.DataAccess.Sistema
         private IRepositorioCliente cliente;
         private IRepositorioClienteContacto clienteContacto;
         private IRepositorioProducto producto;
-        private IRepositorioListaPrecioDetalle listaPrecioDetalle;
-        private IRepositorioListaPrecioEncabezado listaPrecioEncabezado;
         private IRepositorioPreventaEncabezado preventaEncabezado;
         private IRepositorioPreventaDetalle preventaDetalle;
 
@@ -57,24 +55,6 @@ namespace Preventa.DataAccess.Sistema
                 if (producto == null)
                     producto = new RepositorioProducto(_repositorioContexto);
                 return producto;
-            }
-        }
-        public IRepositorioListaPrecioEncabezado ListaPrecioEncabezado
-        {
-            get
-            {
-                if (listaPrecioEncabezado == null)
-                    listaPrecioEncabezado = new RepositorioListaPrecioEncabezado(_repositorioContexto);
-                return listaPrecioEncabezado;
-            }
-        }
-        public IRepositorioListaPrecioDetalle ListaPrecioDetalle
-        {
-            get
-            {
-                if (listaPrecioDetalle == null)
-                    listaPrecioDetalle = new RepositorioListaPrecioDetalle(_repositorioContexto);
-                return listaPrecioDetalle;
             }
         }
         public IRepositorioPreventaEncabezado PreventaEncabezado
