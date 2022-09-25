@@ -11,7 +11,7 @@ namespace Preventa.Modelos.Sistema.Tablas.Preventa
     public class PreventaEncabezado : EntidadBase
     {
         [Column("Serial")]
-        public int Serial { get; set; }
+        public int? Serial { get; set; }
         [Column("Fecha")]
         public DateTime Fecha { get; set; }
         [Column("Contado")]

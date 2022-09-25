@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Preventa.Contracts.Sistema.Tablas;
 using Preventa.Modelos.Sistema.Tablas.Catalogo;
 using Preventa.Modelos.Sistema.Tablas.Preventa;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -57,12 +59,52 @@ namespace Preventa.Web.Controllers
 
         // POST: PreventaController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        
+        public async Task<ActionResult> Create(IFormCollection collection)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                PreventaEncabezado preventa = new PreventaEncabezado();
+
+                MemoryStream stream = new MemoryStream();
+                Request.Body.CopyTo(stream);
+                stream.Position = 0;
+
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    string requestBody = reader.ReadToEnd();
+
+                    if (requestBody.Length > 0)
+                    {
+                        var obj = JsonConvert.DeserializeObject<PreventaEncabezado>(requestBody);
+
+                        if (obj != null)
+                        {
+                            preventa.IdCliente = obj.IdCliente;
+                            preventa.Contado = obj.Contado;
+                            preventa.Observacion = obj.Observacion;
+                            preventa.PreventaDetalle = obj.PreventaDetalle;
+                        }
+                        else
+                        {
+                            return new JsonResult(new { exitoso = 0 });
+                        }
+                    }
+                    else
+                    {
+                        return new JsonResult(new { exitoso = 0 });
+                    }
+                }
+
+                /*
+                    Validación de Backend
+                */
+                
+                _RepositorioWrapper.PreventaEncabezado.Crear(preventa);
+                _RepositorioWrapper.PreventaDetalle.CrearDetalleFactura(preventa.PreventaDetalle);
+                await _RepositorioWrapper.GuardarAsync();
+
+                return new JsonResult(new { redirectToUrl = Url.Action("Index"), exitoso = 1 });
             }
             catch
             {

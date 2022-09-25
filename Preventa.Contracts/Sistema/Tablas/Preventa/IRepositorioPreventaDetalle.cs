@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Preventa.Contracts.Sistema.Tablas.Preventa
 {
-    public interface IRepositorioPreventaDetalle //: IRepositorioBase<ICollection<PreventaDetalle>>
+    public interface IRepositorioPreventaDetalle : IRepositorioBase<PreventaDetalle>
     {
         void CrearDetalleFactura(ICollection<PreventaDetalle> detallePreventa);
 

@@ -4,40 +4,57 @@
     ViewData["Title"] = "Create";
 }
 
+
 <div class="row">
     <div class="col-sm-8 mb-2">
 
-        <div class="card mb-2">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-sm-12 text-end">
-                        <button class="btn btn-primary me-2" id="btnTerminarVenta"><i class="bi bi-currency-dollar"></i> Terminar Venta</button>
-                        <button class="btn btn-danger" id="btnLimpiarLista"><i class="bi bi-x-circle-fill"></i> Limpiar Lista</button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <div class="card">
             <div class="card-header">
                 Productos
             </div>
             <div class="card-body">
-                <div class="row">
-                    @*<div class="col-sm-12">
-                    <label for="exampleFormControlInput1" class="form-label">Buscar Producto</label>
-                    <input type="text" class="form-control form-control-sm" id="buscarProducto" data-idproducto="0" />
-                    </div>*@
+                @*<div class="row">
 
-                    <div class="input-group col-sm-12">
-                        <div class="input-group-prepend">
-                            <label class="input-group-text">Producto</label>
-                        </div>
-                        <select id="cmbProducto" class="custom-select" required="required" class="form-control" asp-items="ViewBag.ListaProductos"></select>
-                        <button class="btn-primary" id="btnAgregarDetalle">Agregar</button>
-                    </div>
+                <div class="input-group col-sm-12">
+                <div class="input-group-prepend">
+                <label class="input-group-text">Producto</label>
+                </div>
+                <select id="cmbProducto" class="custom-select" required="required" class="form-control" asp-items="ViewBag.ListaProductos"></select>
+
+                <div class="text-end">
+                <button class="btn-primary" id="btnAgregarDetalle">Agregar</button>
+                </div>
 
                 </div>
+
+
+                </div>*@
+
+
+                <div class="row align-items-end">
+                    <div class="col-sm-8">
+                        <label class="form-label">Producto</label>
+                        <select id="cmbProducto" class="custom-select" required="required" class="form-control" asp-items="ViewBag.ListaProductos"></select>
+                    </div>
+
+                    <div class="col-sm-2">
+                        <label class="form-label">Cantidad</label>
+                        <input class="form-control form-control-sm" type="text" id="txtcantidad">
+                    </div>
+                    <div class="col-sm-2">
+                        <button class="btn btn-success btn-sm" id="btnAgregarDetalle">Agregar</button>
+                    </div>
+                </div>
+                <span id="ErrorDetalle" class="text-danger"></span>
+                <br />
+                <div class="row">
+                    <div class="col-sm-12 text-end">
+                        <button class="btn btn-primary me-2" id="btnGuardar"><i class="bi bi-currency-dollar"></i> Terminar Venta</button>
+                        @*<button class="btn btn-danger" id="btnLimpiarLista"><i class="bi bi-x-circle-fill"></i> Limpiar Lista</button>*@
+                    </div>
+                </div>
+
                 <hr />
                 <div class="row">
                     <div class="col-sm-12">
@@ -47,7 +64,7 @@
                                     <th>Producto</th>
                                     <th style="width: 80px;">Cantidad</th>
                                     <th>Precio</th>
-                                    <th>Total</th>
+                                    <th>Sub total</th>
                                     <th style="width: 50px;"></th>
                                 </tr>
                             </thead>
@@ -73,12 +90,12 @@
                         Cliente
                     </div>
                     <div class="card-body">
-                        <select asp-for="IdCliente" class="custom-select" required="required" class="form-control" asp-items="ViewBag.ListaClientes"></select>
+                        <select asp-for="IdCliente" id="cmbCliente" class="custom-select" required="required" class="form-control" asp-items="ViewBag.ListaClientes"></select>
                         <span class="text-danger">@Html.ValidationMessageFor(d=> d.IdCliente)</span>
                     </div>
                     <div class="form-group" style="margin:10px;">
                         <label asp-for="Observacion" class="control-label"></label>
-                        <input asp-for="Observacion" class="form-control" />
+                        <input id="txtObservacion" asp-for="Observacion" class="form-control" />
                         <span asp-validation-for="Observacion" class="text-danger"></span>
                     </div>
                 </div>
@@ -107,7 +124,7 @@
                             <div class="input-group-prepend">
                                 <label class="input-group-text" for="inputGroupSelect01">Tipo de pago</label>
                             </div>
-                            <select asp-for="Contado" class="custom-select" id="cbotipopago">
+                            <select asp-for="Contado" class="custom-select" id="cmbTipo">
                                 <option value="True" selected>Contado</option>
                                 <option value="False">Credito</option>
                             </select>
@@ -122,7 +139,7 @@
                             <input type="text" id="txtSubTotal" placeholder="0.00" class="form-control form-control-sm text-end fw-bold" disabled>
                         </div>
                         <div class="input-group input-group-sm mb-2">
-                            <span class="input-group-text bg-primary">IGV (18%)</span>
+                            <span class="input-group-text bg-primary">IGV (15%)</span>
                             <input type="text" id="txtIgv" placeholder="0.00" class="form-control form-control-sm text-end fw-bold" disabled>
                         </div>
                         <div class="input-group input-group-sm mb-2">
@@ -145,26 +162,37 @@
 <script>
 
     var productos = [];
-    $('#btnAgregarDetalle').click(function () 
-    {
-        let idproducto= $('#cmbProducto option:selected').val();
+    $('#btnAgregarDetalle').click(function () {
+        let idproducto = $('#cmbProducto option:selected').val();
         AgregarProducto(idproducto);
     });
 
 
-    function MostrarPrecios(tipoPago = false) 
-    {
-        let total = productos.reduce(function (accumulator, item) {
-            return accumulator + item.Total
-        }, 0)
+    function MostrarPrecios(tipoPago = false) {
+        let subtotal = "";
+        let base = "";
+        let igv = "";
 
-        let base = total / 1.15;
-        let igv = total - base;
+        igv = 0;
+        Object.keys(productos).forEach(index => {
+            if (productos[index].Excento) {
+            } else {
+
+                igv = igv + ((productos[index].PrecioVenta * productos[index].Cantidad) * 0.15);
+            }
+        });
+
+        subtotal = productos.reduce(function (accumulator, item) {
+            return accumulator + item.Total
+        }, 0);
+
+        //igv = subtotal * 0.15;
+        base = subtotal + igv;
 
         //$("#pVentaTotal").html("S/. " + total.toFixed(2))
-        $("#txtSubTotal").val("S/. " + base)
-        $("#txtIgv").val("S/. " + igv)
-        $("#txtTotal").val("S/. " + total)
+        $("#txtSubTotal").val("C$/. " + + parseFloat(subtotal).toFixed(2));
+        $("#txtIgv").val("C$/. " + parseFloat(igv).toFixed(2));
+        $("#txtTotal").val("C$/. " + parseFloat(base).toFixed(2));
 
         //if (tipoPago) {
         //    $("#txtPagoCon").val("S/. " + total.toFixed(2))
@@ -173,39 +201,56 @@
     };
 
     function AgregarProducto(idproducto) {
+
+        $('#ErrorDetalle').empty();
+        let cantidad = $('#txtcantidad').val();
+
+        if (cantidad.length <= 0) {
+            Error = true;
+            $('#ErrorDetalle').append('Debe ingresar cantidad');
+            return;
+        }
+        else if (cantidad <= 0) {
+            Error = true;
+            $('#ErrorDetalle').append('Debe ingresar cantidad mayo que cero');
+            return;
+        }
+
+
         $.ajax({
             url: "@Url.Action("ObtenerProducto","Preventa")?idproducto=" + idproducto,
             type: "GET",
             dataType: "json",
             contentType: "application/json; charset=utf-8",
-            success: function (data) {
-                console.log(data);
-                const existe = productos.some(element => element.IdProducto === data.idProducto);
+            success: function (data) 
+            {
+                const existe = productos.some(element => element.IdProducto === data.id);
 
-                //if (existe) {
-                //    Object.keys(productos).forEach(index => {
+                console.log(existe);
+                if (existe) {
+                    Object.keys(productos).forEach(index => {
+                        //console.log(productos[index]);
+                        if (productos[index].IdProducto === data.id) {
+                            productos[index] = {
+                                IdProducto: data.id,
+                                Descripcion: data.descripcion,
+                                PrecioVenta: data.precioUnitario,
+                                Cantidad: cantidad,//productos[index].Cantidad + 1,
+                                Total: data.precioUnitario * cantidad,
+                                Excento: data.excento
+                            }
+                        }
+                    });
 
-                //        if (productos[index].IdProducto === data.idProducto) {
-                //            productos[index] = {
-                //                IdProducto: data.idProducto,
-                //                Descripcion: data.Descripcion,
-                //                PrecioVenta: data.PrecioUnitario,
-                //                Cantidad: 10//productos[index].Cantidad + 1,
-                //                Total: data.precioVenta * (productos[index].Cantidad + 1)
-                //            }
-                //        }
-                //    });
-
-                //} else 
-                {
+                } else {
                     var producto = {
-                        IdProducto: data.ide,
+                        IdProducto: data.id,
                         Descripcion: data.descripcion,
                         PrecioVenta: data.precioUnitario,
-                        Cantidad: 1,
-                        Total: data.precioUnitario
+                        Cantidad: cantidad,
+                        Total: cantidad * data.precioUnitario,
+                        Excento: data.excento
                     }
-
                     productos.push(producto);
                 }
 
@@ -216,10 +261,11 @@
                     $("<tr>").append(
                         $("<td>").append(item.Descripcion),
                         $("<td>").append(item.Cantidad),
+                        //$("<td>").append($("<input>").value(item.Cantidad)),
                         $("<td>").append(item.PrecioVenta),
                         $("<td>").append(item.Total),
                         $("<td>").append(
-                            $("<button>").addClass("btn btn-danger btn-eliminar btn-sm" ).append(
+                            $("<button>").addClass("btn btn-danger btn-eliminar btn-sm").append(
                                 $("<i>").addClass("fa-trash")
                             )
                         ),
@@ -235,5 +281,111 @@
         })
 
     }
+
+    $('#btnGuardar').click(function () {
+        Guardar();
+    });
+
+    function Guardar() {
+        var ListaDetalle = [];
+
+        Object.keys(productos).forEach(index => {
+            ListaDetalle.push({
+                IdProducto: productos[index].IdProducto,
+                Cantidad: productos[index].Cantidad,
+                Precio: productos[index].PrecioVenta,
+                IvaPorcentaje: (productos[index].Excento) ? 15 : 0,
+                DescuentoPorcentaje: 0
+            });
+        });
+
+
+        
+
+        console.log(ListaDetalle);
+        jQuery.ajax({
+            data: JSON.stringify({
+                IdCliente: $('#cmbCliente option:selected').val(),
+                Contado: $('#cmbTipo option:selected').val(),
+                Observacion: $('#txtObservacion').val(),
+                PreventaDetalle: ListaDetalle
+            }),
+            type: 'POST',
+            url: '@Url.Action("Create", "Preventa")',
+            //headers: {
+            //    "RequestVerificationToken": AddAntiforgeryToken()
+            //},
+            contentType: false,
+            processData: false,
+            cache: false,
+            async: false,
+            success: function (data) 
+            {
+
+                if (data.exitoso == 1) {
+                    Swal.fire({
+                        title: 'Preventa',
+                        text: 'Preventa realizada correctamente',
+                        icon: 'success',
+                        confirmButtonText: 'Aceptar'
+                    }).then(function () {
+                        window.location.replace(data.redirectToUrl);
+                    });
+                }
+                else if (data.exitoso == 2) {
+                    Swal.fire({
+                        title: 'Preventa',
+                        text: data.mensaje,
+                        icon: 'error',
+                        confirmButtonText: 'Aceptar'
+                    });
+                }
+                else if (data.exitoso == 0) {
+                    Swal.fire({
+                        title: 'Preventa',
+                        text: 'Ocurrió un problema, favor intentar más tarde.',
+                        icon: 'error',
+                        confirmButtonText: 'Aceptar'
+                    });
+                }
+            },
+            error: function (data) {
+                HoldOn.close();
+                Swal.fire({
+                    title: 'Preventa',
+                    text: 'Ocurrió un problema, favor intentar más tarde.',
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar'
+                });
+            },
+            failure: function (data) {
+                HoldOn.close();
+                Swal.fire({
+                    title: 'Preventa',
+                    text: 'Ocurrió un probema, favor intentar más tarde.',
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar'
+                });
+            }
+        });
+        //function Guardar() {
+        //    var ListaDetalle = [];
+
+        //    Object.keys(productos).forEach(index => {
+        //        ListaDetalle.push({
+        //            IdProducto: productos[index].IdProducto,
+        //            Cantidad: productos[index].Cantidad,
+        //            Precio: productos[index].PrecioVenta,
+        //            IvaPorcentaje: (productos[index].Excento) ? 15 : 0,
+        //            Total: data.precioUnitario * cantidad,
+        //            DescuentoPorcentaje: 0
+        //        });
+        //        console.log(ListaDetalle);
+
+        //
+
+
+    }
+
 
 </script>
